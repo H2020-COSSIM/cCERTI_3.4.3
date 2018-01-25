@@ -1,3 +1,6 @@
+A modified version of CERTI that integrates with COSSIM framework. 
+The cCERTI extends the scalability of CERTI for more than 500 nodes.
+
 
 License
 -------
