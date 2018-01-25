@@ -1,0 +1,8 @@
+
+License
+-------
+
+See COPYING file for use/modification/distribution conditions.
+The main license (GPL) can be found in the file "gpl.txt". The license
+for libraries librti and libcerti (LGPL) can be found in the file
+"lesser.txt".

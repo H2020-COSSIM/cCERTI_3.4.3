@@ -1,0 +1,150 @@
+SET(LIBHLA_EXPORTED_INCLUDES libhla.hh)
+
+SET(LIBHLA_TYPES1516_SRCS
+    HLAbuffer.hh HLAbuffer.cc
+)
+LIST(APPEND LIBHLA_EXPORTED_INCLUDES 
+    HLAtypesIEEE1516.hh
+    HLAbuffer.hh
+    HLAbasicType.hh
+    HLAenumeratedType.hh
+    HLAfixedArray.hh
+    HLAvariableArray.hh
+    HLAfixedRecord.hh
+    HLAvariantRecord.hh)
+SOURCE_GROUP("Source Files\\Types1516" FILES ${LIBHLA_TYPES1516_SRCS})
+
+enable_language(C)
+SET(LIBHLA_HASH_SRCS sha1.c MurmurHash2A.cc)
+LIST(APPEND LIBHLA_EXPORTED_INCLUDES sha1.h)
+set_source_files_properties(sha1.c PROPERTIES LANGUAGE "C")
+SOURCE_GROUP("Source Files\\Hash" FILES ${LIBHLA_HASH_SRCS})
+
+# Currently TLSF does not compile as-is on WIN32
+IF (NOT WIN32)
+  SET(LIBHLA_ALLOC_SRCS tlsf.c tlsf_target.h)
+  LIST(APPEND LIBHLA_EXPORTED_INCLUDES tlsf.h)
+  set_source_files_properties(tlsf.c PROPERTIES LANGUAGE "C")
+  set_source_files_properties(tlsf.c PROPERTIES CFLAGS "-Wextra -Wall -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wno-long-long -Wstrict-aliasing=2")
+  SOURCE_GROUP("Source Files\\Alloc" FILES ${LIBHLA_ALLOC_SRCS} tlsf.h)
+ENDIF (NOT WIN32)
+
+SET(LIBHLA_MB_SRCS MessageBuffer.cc MsgBuffer.c)
+LIST(APPEND LIBHLA_EXPORTED_INCLUDES MessageBuffer.hh MsgBuffer.h)
+set_source_files_properties(MsgBuffer.c PROPERTIES LANGUAGE "C")
+if (MSVC)
+	set_source_files_properties(MsgBuffer.c PROPERTIES CFLAGS "-D_CRT_SECURE_NO_WARNINGS")
+endif ()
+
+SET(LIBHLA_MB_TEST_SRCS MessageBufferTests.cc)
+ADD_EXECUTABLE(MessageBufferTests ${LIBHLA_MB_TEST_SRCS})
+TARGET_LINK_LIBRARIES(MessageBufferTests HLA)
+
+add_executable(MsgBufferTests MsgBufferTests.c)
+set_source_files_properties(MsgBufferTests.c PROPERTIES LANGUAGE "C")
+target_link_libraries(MsgBufferTests HLA)
+
+INSTALL(TARGETS MessageBufferTests MsgBufferTests
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+
+ADD_TEST(NAME LibHLA_MB_Tests COMMAND $<TARGET_FILE:MessageBufferTests>)
+ADD_TEST(NAME LibHLA_MB_Tests_InC COMMAND $<TARGET_FILE:MsgBufferTests>)
+
+SET(LIBHLA_CLOCK_SRCS
+    Clock.cc
+    ClockFactory.cc)
+LIST(APPEND LIBHLA_EXPORTED_INCLUDES Clock.hh)
+
+IF (HAVE_POSIX_CLOCK)
+    LIST(APPEND LIBHLA_CLOCK_SRCS PosixClock.cc)
+    LIST(APPEND LIBHLA_EXPORTED_INCLUDES PosixClock.hh)
+ENDIF(HAVE_POSIX_CLOCK)
+
+IF (HAVE_GETTIMEOFDAY)
+    LIST(APPEND LIBHLA_CLOCK_SRCS GettimeofdayClock.cc)
+    LIST(APPEND LIBHLA_EXPORTED_INCLUDES GettimeofdayClock.hh)
+ENDIF(HAVE_GETTIMEOFDAY)
+
+IF (HAVE_TSC_CLOCK)
+    LIST(APPEND LIBHLA_CLOCK_SRCS TSCClock.cc)
+    LIST(APPEND LIBHLA_EXPORTED_INCLUDES TSCClock.hh)
+ENDIF(HAVE_TSC_CLOCK)
+
+IF (HAVE_WIN_CLOCK)
+   LIST(APPEND LIBHLA_CLOCK_SRCS WinClock.cc WinPerfClock.cc)
+   LIST(APPEND LIBHLA_EXPORTED_INCLUDES WinClock.hh WinPerfClock.hh)
+ENDIF(HAVE_WIN_CLOCK)
+
+SOURCE_GROUP("Source Files\\Clock" FILES ${LIBHLA_CLOCK_SRCS})
+
+SET(LIBHLA_IPC_SRCS)
+LIST(APPEND LIBHLA_EXPORTED_INCLUDES SHM.hh Semaphore.hh)
+
+IF (WIN32)
+   LIST(APPEND LIBHLA_IPC_SRCS SHMWin32.cc)
+   LIST(APPEND LIBHLA_IPC_SRCS SemaphoreWin32.cc)
+   LIST(APPEND LIBHLA_EXPORTED_INCLUDES SHMWin32.hh SemaphoreWin32.hh)
+ELSE (WIN32)
+   LIST(APPEND LIBHLA_IPC_SRCS
+        SHMPosix.cc SHMSysV.cc
+        SemaphorePosix.cc SemaphoreSysV.cc)
+   LIST(APPEND LIBHLA_EXPORTED_INCLUDES
+       SHMPosix.hh SHMSysV.hh
+       SemaphorePosix.hh SemaphoreSysV.hh)
+ENDIF (WIN32)
+
+SOURCE_GROUP("Source Files\\IPC" FILES ${LIBHLA_IPC_SRCS})
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+
+# ISO C++ does not support 'long long', but HLAtypesIEEE1516.hh needs it
+IF(CMAKE_COMPILER_IS_GNUCC)
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-long-long")
+ENDIF(CMAKE_COMPILER_IS_GNUCC)
+IF(CMAKE_COMPILER_IS_GNUCXX)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-long-long")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
+ADD_LIBRARY(HLA
+    ${LIBHLA_TYPES1516_SRCS}
+    ${LIBHLA_HASH_SRCS}
+    ${LIBHLA_ALLOC_SRCS}
+    ${LIBHLA_MB_SRCS}
+    ${LIBHLA_CLOCK_SRCS}
+    ${LIBHLA_IPC_SRCS}
+    ${LIBHLA_EXPORTED_INCLUDES}
+)
+
+IF (HAVE_POSIX_CLOCK)
+    IF(RT_LIBRARY)
+       TARGET_LINK_LIBRARIES(HLA ${RT_LIBRARY})
+    ENDIF(RT_LIBRARY)
+ENDIF (HAVE_POSIX_CLOCK)
+
+SET_TARGET_PROPERTIES(HLA PROPERTIES PROJECT_LABEL LibHLA)
+
+SET_TARGET_PROPERTIES(HLA PROPERTIES VERSION ${PACKAGE_VERSION} SOVERSION ${PACKAGE_VERSION_MAJOR})
+
+ADD_EXECUTABLE(TestHLAtypes TestHLAtypes.cc)
+TARGET_LINK_LIBRARIES(TestHLAtypes HLA)
+ADD_TEST(NAME LibHLAtypes COMMAND $<TARGET_FILE:TestHLAtypes>)
+
+ADD_EXECUTABLE(TestClocks TestClocks.cc)
+TARGET_LINK_LIBRARIES(TestClocks HLA)
+ADD_TEST(NAME LibHLAClocks COMMAND $<TARGET_FILE:TestClocks>)
+
+install(FILES
+    ${LIBHLA_EXPORTED_INCLUDES}
+    DESTINATION include/libhla)
+
+install(PROGRAMS
+    hlaomtdif2cpp.py
+    DESTINATION bin)
+
+install(TARGETS HLA
+    EXPORT CERTIDepends
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

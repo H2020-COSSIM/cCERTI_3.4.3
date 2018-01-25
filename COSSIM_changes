@@ -1,0 +1,11 @@
+The following files are changed to support CERTI-HLA in the COSSIM.
+
+--Multiple HLA (2nd constructor is implemented to support up to 3 different HLA servers according to number of nodes)
+* file CERTI-3.4.3-Source/include/hla-1_3/RTIambServices.hh (line 816)
+* file CERTI-3.4.3-Source/libRTI/hla-1_3/RTIambassador.cc   (line 396)
+
+-- SynchServer is implemented 
+* folder CERTI-3.4.3-Source/SynchServer 
+
+-- Federation file is created to declare the Federation description
+* file CERTI-3.4.3-Source/Federation.fed
