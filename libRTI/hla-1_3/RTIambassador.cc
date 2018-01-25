@@ -3,6 +3,12 @@
 // Copyright (C) 2002-2014  ONERA
 //
 // This file is part of CERTI-libRTI
+
+// ----------------------------------------------------------------------------
+// COSSIM - Etherlink
+// Copyright (c) 2018, H2020 COSSIM.
+// Copyright (c) 2018, Telecommunications Systems Institute.
+// ----------------------------------------------------------------------------
 //
 // CERTI-libRTI is free software ; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License

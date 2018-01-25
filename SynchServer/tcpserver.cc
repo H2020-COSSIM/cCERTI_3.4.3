@@ -1,3 +1,12 @@
+/*
+ * ----------------------------------------------------------------------------
+ * Synchronization Server. It is used to initiate the HLA Federations.
+ * Copyright (c) 2018, H2020 COSSIM.
+ * Copyright (c) 2018, Telecommunications Systems Institute.
+ * Author: Nikolaos Tampouratzis, ntampouratzis@isc.tuc.gr
+ * ----------------------------------------------------------------------------
+ */
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

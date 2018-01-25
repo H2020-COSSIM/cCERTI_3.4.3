@@ -1,7 +1,13 @@
 // HLA 1.3 Header "RTIambServices.hh"
 
 typedef FederateAmbassador *FederateAmbassadorPtr ;
-
+/*
+ * ----------------------------------------------------------------------------
+ * COSSIM - Etherlink
+ * Copyright (c) 2018, H2020 COSSIM.
+ * Copyright (c) 2018, Telecommunications Systems Institute.
+ * ----------------------------------------------------------------------------
+ */
 
 /**
  * @defgroup HLA13_FederationManagement Federation Management
