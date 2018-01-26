@@ -1,5 +1,8 @@
 # cCERTI - COSSIM-modified CERTI version.
 
+Please see individual files for details of the license on each file.
+
+The preferred license can be found in [LICENSE](LICENSE).
 
 CERTI is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
