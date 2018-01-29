@@ -1,6 +1,6 @@
 # cCERTI - COSSIM-modified CERTI version. 
 
-A modified version of CERTI that integrates with COSSIM framework. The cCERTI extends the scalability of CERTI for more than 500 nodes. It should be noted that cCERTI can be used independently of COSSIM as a standalone package incorporating all the changes that have been integrated to the official CERTI 3.4.3 release.
+A modified version of CERTI that integrates the COSSIM framework. The cCERTI extends the scalability of CERTI for more than 500 nodes. It should be noted that cCERTI can be used independently of COSSIM as a standalone package incorporating all the changes that have been integrated to the official CERTI 3.4.3 release.
 
 ## Differences between cCERTI and official CERTI 3.4.3 version
 
