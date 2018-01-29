@@ -4,7 +4,7 @@ A modified version of CERTI that integrates the COSSIM framework. The cCERTI ext
 
 ## Differences between cCERTI and official CERTI 3.4.3 version
 
-2nd constructor is implemented to support up to 3 different HLA servers according to number of simulated nodes. Specifically, the following files are changed:
+2nd constructor is implemented to support up to 3 different HLA servers according to number of simulated nodes. Specifically, the following files have been changed:
 
 - include/hla-1_3/RTIambServices.hh
 - libRTI/hla-1_3/RTIambassador.cc
